@@ -86,6 +86,41 @@ Muestra todos los usuarios que han sido registrados en el sistema.
 
 Cierra el menú principal y finaliza la ejecución del programa.
 
+## Descarga y ejecución del proyecto
+
+Para utilizar correctamente el programa es necesario descargar el repositorio completo, ya que todos los archivos necesarios para su funcionamiento se encuentran dentro del proyecto.
+
+### 1. Descargar el repositorio
+
+Desde GitHub se debe seleccionar la opción **Code** y posteriormente **Download ZIP**.
+
+Una vez descargado el archivo `.zip`, se debe descomprimir en una ubicación del equipo.
+
+### 2. Abrir el proyecto en Visual Studio Code
+
+Después de descomprimir el proyecto, se debe abrir la carpeta del proyecto utilizando **Visual Studio Code**.
+
+Para ejecutar correctamente el programa es necesario tener instaladas las extensiones de Java en Visual Studio Code.
+
+Se recomienda tener instalada la extensión:
+
+- **Extension Pack for Java**
+
+Esta extensión permite trabajar y ejecutar proyectos Java directamente desde Visual Studio Code.
+
+### 3. Ejecutar el programa
+
+Una vez abierto el proyecto en Visual Studio Code:
+
+1. Buscar la carpeta donde se encuentra el código fuente.
+2. Abrir el archivo `Main.java`.
+3. Ubicar el método `main`.
+4. Presionar el botón **Run** o **Ejecutar** que proporciona Visual Studio Code.
+
+Al ejecutar `Main.java`, se iniciará el programa y aparecerán las ventanas correspondientes al gestor de tareas.
+
+A partir de ese momento se podrá utilizar el menú principal y todas las funcionalidades disponibles del programa.
+
 ## Estructura del proyecto
 
 El proyecto está organizado de la siguiente manera:
@@ -106,3 +141,4 @@ Gestor-Tareas-Java/
 │
 ├── .gitignore
 └── pom.xml
+
