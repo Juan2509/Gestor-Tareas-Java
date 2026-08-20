@@ -5,17 +5,24 @@ import javax.swing.JOptionPane;
 
 public class GestorTareas {
 
-    private ArrayList<Usuario> usuarios = new ArrayList<>();
-    private ArrayList<Tarea> tareas = new ArrayList<>();
+    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private TareaDAO tareaDAO = new TareaDAO();
 
     public void crearUsuario() {
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.nombre = JOptionPane.showInputDialog("Ingrese el nombre del usuario: ");
-        usuarios.add(nuevoUsuario);
+
+        if (nuevoUsuario.nombre == null || nuevoUsuario.nombre.isBlank()) {
+            return;
+        }
+
+        usuarioDAO.crear(nuevoUsuario);
         JOptionPane.showMessageDialog(null, "Usuario creado correctamente");
     }
 
     public void crearTarea() {
+
+        ArrayList<Usuario> usuarios = usuarioDAO.listar();
 
         if (usuarios.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Primero debes de crear un usuario");
@@ -36,11 +43,18 @@ public class GestorTareas {
             prioridades[0]
         );
 
-        tareas.add(nuevaTarea);
+        if (nuevaTarea.prioridad == null) {
+            return;
+        }
+
+        tareaDAO.crear(nuevaTarea);
         JOptionPane.showMessageDialog(null, "Tarea creada correctamente");
     }
 
     public void asignarTarea() {
+
+        ArrayList<Usuario> usuarios = usuarioDAO.listar();
+        ArrayList<Tarea> tareas = tareaDAO.listar();
 
         if (usuarios.isEmpty() && tareas.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay ningún usuario o tarea registrada");
@@ -101,7 +115,7 @@ public class GestorTareas {
                         JOptionPane.showMessageDialog(null, "Seleccione un usuario válido");
                     } else {
                         Usuario usuarioSeleccionado = usuarios.get(numeroUsuario - 1);
-                        tareaSeleccionada.usuario = usuarioSeleccionado;
+                        tareaDAO.asignarUsuario(tareaSeleccionada.id, usuarioSeleccionado.id);
 
                         JOptionPane.showMessageDialog(null, "Tarea asignada correctamente");
                     }
@@ -118,6 +132,8 @@ public class GestorTareas {
 
     public void cambiarEstado() {
 
+        ArrayList<Tarea> tareas = tareaDAO.listar();
+
         if (tareas.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay tareas registradas");
             return;
@@ -131,7 +147,7 @@ public class GestorTareas {
             if (tarea.usuario != null) {
                 listaTareas += (i + 1) + ". " + tarea.nombre + " | Usuario: " + tarea.usuario.nombre + "\n";
             } else {
-                listaTareas += (i + 1) + ". " + tarea.nombre + " 1 Sin asignar\n";
+                listaTareas += (i + 1) + ". " + tarea.nombre + " | Sin asignar\n";
             }
         }
 
@@ -163,7 +179,7 @@ public class GestorTareas {
                     "Por realizar", "En proceso", "Finalizado"
                 };
 
-                tareaSeleccionada.estado = (String) JOptionPane.showInputDialog(
+                String nuevoEstado = (String) JOptionPane.showInputDialog(
                     null,
                     "Tarea: " + tareaSeleccionada.nombre
                     + "\nUsuario: " + usuarioAsignado
@@ -176,6 +192,11 @@ public class GestorTareas {
                     estados[0]
                 );
 
+                if (nuevoEstado == null) {
+                    return;
+                }
+
+                tareaDAO.actualizarEstado(tareaSeleccionada.id, nuevoEstado);
                 JOptionPane.showMessageDialog(null, "Estado actualizado correctamente");
             }
 
@@ -185,6 +206,8 @@ public class GestorTareas {
     }
 
     public void verTareasPorUsuario() {
+
+        ArrayList<Usuario> usuarios = usuarioDAO.listar();
 
         if (usuarios.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay usuarios registrados");
@@ -211,12 +234,14 @@ public class GestorTareas {
                 JOptionPane.showMessageDialog(null, "Seleccione un usuario válido");
             } else {
                 Usuario usuarioSeleccionado = usuarios.get(numeroUsuario - 1);
+                ArrayList<Tarea> tareas = tareaDAO.listar();
 
                 String tareasUsuario = "";
                 for (int i = 0; i < tareas.size(); i++) {
 
-                    if (tareas.get(i).usuario == usuarioSeleccionado) {
-                        tareasUsuario += (i + 1) + ". " + tareas.get(i).nombre + "\n";
+                    Tarea tarea = tareas.get(i);
+                    if (tarea.usuario != null && tarea.usuario.id == usuarioSeleccionado.id) {
+                        tareasUsuario += (i + 1) + ". " + tarea.nombre + "\n";
                     }
                 }
 
@@ -229,6 +254,8 @@ public class GestorTareas {
     }
 
     public void verTareasPorPrioridad() {
+
+        ArrayList<Tarea> tareas = tareaDAO.listar();
 
         if (tareas.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay tareas registradas");
@@ -272,6 +299,8 @@ public class GestorTareas {
     }
 
     public void verUsuarios() {
+
+        ArrayList<Usuario> usuarios = usuarioDAO.listar();
 
         if (usuarios.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay usuarios registrados");
